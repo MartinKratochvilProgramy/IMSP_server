@@ -1,4 +1,4 @@
-import { login, register, getRole } from './middleware'
+import { login, register, getRole, forgotPassword } from './middleware'
 import validateAuth from './middleware/validate_auth'
 const express = require('express')
 const mongoose = require('mongoose')
@@ -17,6 +17,7 @@ const DATABASE_ROUTE = process.env.MONGO_URI
 
 app.post('/login', login)
 app.post('/register', register)
+app.post('/forgot_password', forgotPassword)
 app.get('/get_role', getRole)
 app.get('/validate_auth', validateAuth)
 
