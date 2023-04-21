@@ -5,11 +5,11 @@ const bcrypt = require('bcrypt')
 
 export default async function register (req: Request, res: Response) {
   // create user account, return 500 err if no password or username given
-  let { username, password } = req.body
+  let { email, password, displayName } = req.body
   const role = 'user'
 
   // find if user exists, if yes send 500 err
-  const existingUser = await User.findOne({ username }).exec()
+  const existingUser = await User.findOne({ email }).exec()
   if (existingUser) {
     res.status(500)
     res.json({
@@ -22,9 +22,9 @@ export default async function register (req: Request, res: Response) {
     // create user in db with hashed password
     const salt = await bcrypt.genSalt(10)
     password = await bcrypt.hash(password, salt)
-    await User.create({ username, password, role })
+    await User.create({ email, password, displayName, role })
 
-    const user = await User.findOne({ username }).exec()
+    const user = await User.findOne({ email }).exec()
 
     const accessToken = createToken({
       id: user._id
@@ -32,7 +32,7 @@ export default async function register (req: Request, res: Response) {
 
     res.json({
       message: 'Success',
-      username,
+      email,
       role,
       token: accessToken
     })

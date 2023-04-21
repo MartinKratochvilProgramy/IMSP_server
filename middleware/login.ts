@@ -5,10 +5,10 @@ const bcrypt = require('bcrypt')
 
 export default async function login (req: Request, res: Response) {
   // validate user account on login
-  const { username, password } = req.body
+  const { email, password } = req.body
 
   // find if user exists, if not send back 403 err
-  const user = await User.findOne({ username }).exec()
+  const user = await User.findOne({ email }).exec()
   if (!user) {
     res.status(403)
     res.json({
@@ -34,7 +34,8 @@ export default async function login (req: Request, res: Response) {
 
     res.json({
       message: 'Success',
-      username,
+      email,
+      displayName: user.displayName,
       role: user.role,
       token: accessToken
     })
